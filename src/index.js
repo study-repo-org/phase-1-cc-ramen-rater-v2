@@ -17,6 +17,7 @@ const handleClick = (ramen) => {
 
 
 
+
 const addSubmitListener = () => {
   const form = document.getElementById('new-ramen');
   
@@ -46,8 +47,12 @@ const addSubmitListener = () => {
 
     const ramenMenu = document.getElementById('ramen-menu');
     ramenMenu.appendChild(newRamenImg);
+
+    form.reset();
   });
 };
+
+
 
 
 const displayRamens = () => {
@@ -62,6 +67,8 @@ const displayRamens = () => {
         
         img.addEventListener('click', () => handleClick(ramen));
         ramenMenu.appendChild(img);
+
+        
       });
     })
     .catch(error => console.error('Error fetching ramen data:', error));
