@@ -37,16 +37,25 @@ const addSubmitListener = () => {
       rating: newRating,
       comment: newComment,
     };
-    
-    const newRamenImg = document.createElement('img');
-    newRamenImg.src = newImage;
 
-    newRamenImg.addEventListener('click', () => {
-      handleClick(newRamen);
-    });
-
-    const ramenMenu = document.getElementById('ramen-menu');
-    ramenMenu.appendChild(newRamenImg);
+    // Send POST request to create new ramen
+    fetch('http://localhost:3000/ramens', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newRamen),
+    })
+    .then(response => response.json())
+    .then(createdRamen => {
+      // Update UI to display newly created ramen
+      const newRamenImg = document.createElement('img');
+      newRamenImg.src = createdRamen.image;
+      newRamenImg.addEventListener('click', () => handleClick(createdRamen));
+      const ramenMenu = document.getElementById('ramen-menu');
+      ramenMenu.appendChild(newRamenImg);
+    })
+    .catch(error => console.error('Error creating new ramen:', error));
 
     form.reset();
   });
@@ -67,8 +76,9 @@ const displayRamens = () => {
         
         img.addEventListener('click', () => handleClick(ramen));
         ramenMenu.appendChild(img);
-
-        
+        if (ramens.length > 0) {
+          handleClick(ramens[0]);
+        }
       });
     })
     .catch(error => console.error('Error fetching ramen data:', error));
