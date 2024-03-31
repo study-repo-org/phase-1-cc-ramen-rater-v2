@@ -71,20 +71,47 @@ const displayRamens = () => {
     .then(response => response.json())
     .then(ramens => {
       ramens.forEach((ramen) => {
+        const ramenContainer = document.createElement('div'); // Create a container for each ramen item
         const img = document.createElement('img');
         img.src = ramen.image;
         
         img.addEventListener('click', () => handleClick(ramen));
-        ramenMenu.appendChild(img);
-        if (ramens.length > 0) {
-          handleClick(ramens[0]);
-        }
+
+        // Create a delete button for each ramen item
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', (event) => {
+         
+          handleDelete(ramen.id);
+        });
+
+        // Append the img and delete button to the ramen container
+        ramenContainer.appendChild(img);
+        ramenContainer.appendChild(deleteButton);
+
+        ramenMenu.appendChild(ramenContainer);
       });
+
+      if (ramens.length > 0) {
+        handleClick(ramens[0]);
+      }
     })
     .catch(error => console.error('Error fetching ramen data:', error));
 };
 
 
+const handleDelete = (ramenId) => {
+  fetch(`http://localhost:3000/ramens/${ramenId}`, {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to delete ramen');
+    }
+    // Optionally, update UI or perform any additional actions after successful deletion
+  })
+  .catch(error => console.error('Error deleting ramen:', error));
+};
 
 const main = () => {
   displayRamens();
